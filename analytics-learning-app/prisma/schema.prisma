@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  hashedEmail String? // For privacy-safe analytics
+  createdAt DateTime @default(now())
+  
+  // User preferences
+  hasConsented Boolean @default(false)
+  npsShownAt   DateTime?
+  npsScore     Int?
+  
+  // Relations
+  checklists   Checklist[]
+  events       Event[]
+  feedback     Feedback[]
+  
+  @@map("users")
+}
+
+model Checklist {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  items       ChecklistItem[]
+  
+  @@map("checklists")
+}
+
+model ChecklistItem {
+  id          String    @id @default(cuid())
+  text        String
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  
+  checklistId String
+  checklist   Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  
+  @@map("checklist_items")
+}
+
+model Event {
+  id         String   @id @default(cuid())
+  name       String   // Event name from schema
+  properties String   // JSON string of event properties
+  timestamp  DateTime @default(now())
+  sessionId  String?  // For session tracking
+  
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([name])
+  @@index([timestamp])
+  @@index([userId])
+  @@map("events")
+}
+
+model Feedback {
+  id          String   @id @default(cuid())
+  type        String   // BUG_REPORT, FEATURE_REQUEST, GENERAL, NPS, MICRO_SURVEY
+  content     String
+  rating      Int?     // For NPS/ratings
+  screenshot  String?  // Base64 or file path
+  userAgent   String?
+  url         String?
+  consoleErrors String? // JSON string of console errors
+  sentiment   String?  // positive/negative/neutral
+  createdAt   DateTime @default(now())
+  
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@map("feedback")
+}
+
+model ExperimentVariant {
+  id           String   @id @default(cuid())
+  experimentId String   // e.g., "smart_hints"
+  userId       String
+  variant      String   // e.g., "control", "treatment"
+  assignedAt   DateTime @default(now())
+  
+  @@unique([experimentId, userId])
+  @@index([experimentId])
+  @@map("experiment_variants")
+}
+

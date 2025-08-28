@@ -1,0 +1,186 @@
+{
+  "events": {
+    "app_open": {
+      "description": "User opens the application",
+      "properties": {
+        "user_agent": "string",
+        "referrer": "string?",
+        "timestamp": "datetime"
+      },
+      "example": {
+        "user_agent": "Mozilla/5.0...",
+        "referrer": "https://google.com",
+        "timestamp": "2024-01-01T00:00:00Z"
+      },
+      "when_to_fire": "On first page load of the app"
+    },
+    "page_view": {
+      "description": "User views a specific page",
+      "properties": {
+        "page": "string",
+        "title": "string",
+        "url": "string"
+      },
+      "example": {
+        "page": "/checklists",
+        "title": "Checklists",
+        "url": "https://app.com/checklists"
+      },
+      "when_to_fire": "On every page navigation"
+    },
+    "signup": {
+      "description": "User creates an account",
+      "properties": {
+        "method": "string",
+        "user_id": "string"
+      },
+      "example": {
+        "method": "email",
+        "user_id": "user_123"
+      },
+      "when_to_fire": "When user completes registration"
+    },
+    "login": {
+      "description": "User logs into their account",
+      "properties": {
+        "method": "string",
+        "user_id": "string"
+      },
+      "example": {
+        "method": "email",
+        "user_id": "user_123"
+      },
+      "when_to_fire": "When user successfully authenticates"
+    },
+    "checklist_create": {
+      "description": "User creates a new checklist",
+      "properties": {
+        "checklist_id": "string",
+        "title": "string",
+        "items_count": "number",
+        "experiment_variant": "string?"
+      },
+      "example": {
+        "checklist_id": "checklist_123",
+        "title": "My Todo List",
+        "items_count": 5,
+        "experiment_variant": "smart_hints_on"
+      },
+      "when_to_fire": "When checklist is successfully saved"
+    },
+    "checklist_complete": {
+      "description": "User marks an entire checklist as complete",
+      "properties": {
+        "checklist_id": "string",
+        "title": "string",
+        "items_count": "number",
+        "completion_time_ms": "number",
+        "experiment_variant": "string?"
+      },
+      "example": {
+        "checklist_id": "checklist_123",
+        "title": "My Todo List",
+        "items_count": 5,
+        "completion_time_ms": 120000,
+        "experiment_variant": "smart_hints_on"
+      },
+      "when_to_fire": "When all checklist items are marked complete"
+    },
+    "checklist_share": {
+      "description": "User shares a checklist",
+      "properties": {
+        "checklist_id": "string",
+        "share_method": "string"
+      },
+      "example": {
+        "checklist_id": "checklist_123",
+        "share_method": "link"
+      },
+      "when_to_fire": "When user clicks share button or copies link"
+    },
+    "cta_click": {
+      "description": "User clicks a call-to-action button",
+      "properties": {
+        "cta_text": "string",
+        "cta_location": "string",
+        "target_page": "string?"
+      },
+      "example": {
+        "cta_text": "Get Started",
+        "cta_location": "homepage_hero",
+        "target_page": "/checklists"
+      },
+      "when_to_fire": "When user clicks any primary action button"
+    },
+    "error": {
+      "description": "An error occurs in the application",
+      "properties": {
+        "error_type": "string",
+        "error_message": "string",
+        "stack_trace": "string?",
+        "page": "string"
+      },
+      "example": {
+        "error_type": "ValidationError",
+        "error_message": "Title is required",
+        "stack_trace": "Error: Title is required\\n    at...",
+        "page": "/checklists/new"
+      },
+      "when_to_fire": "When any handled or unhandled error occurs"
+    },
+    "feedback_opened": {
+      "description": "User opens feedback modal/form",
+      "properties": {
+        "feedback_type": "string",
+        "trigger": "string"
+      },
+      "example": {
+        "feedback_type": "bug_report",
+        "trigger": "menu_click"
+      },
+      "when_to_fire": "When feedback modal/form becomes visible"
+    },
+    "feedback_submitted": {
+      "description": "User submits feedback",
+      "properties": {
+        "feedback_type": "string",
+        "rating": "number?",
+        "has_screenshot": "boolean?",
+        "content_length": "number"
+      },
+      "example": {
+        "feedback_type": "bug_report",
+        "rating": null,
+        "has_screenshot": true,
+        "content_length": 145
+      },
+      "when_to_fire": "When feedback form is successfully submitted"
+    },
+    "nps_shown": {
+      "description": "NPS survey is displayed to user",
+      "properties": {
+        "trigger": "string",
+        "user_segment": "string?"
+      },
+      "example": {
+        "trigger": "checklist_completion_count_2",
+        "user_segment": "active_user"
+      },
+      "when_to_fire": "When NPS modal appears on screen"
+    },
+    "nps_scored": {
+      "description": "User provides NPS rating",
+      "properties": {
+        "score": "number",
+        "category": "string",
+        "followup_comment": "boolean"
+      },
+      "example": {
+        "score": 9,
+        "category": "promoter",
+        "followup_comment": true
+      },
+      "when_to_fire": "When user selects an NPS score (0-10)"
+    }
+  }
+}
